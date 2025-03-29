@@ -480,7 +480,10 @@ async def on_message(message):
 
                     #no need to clean result, if all formatting goes well
                     if result!="":
-                        result = result.split(f"{message.author.display_name}:")[0]
+
+                        for I in currchannel.chat_history:
+                            result = result.split(I.split("\n")[0])[0]
+
                         append_history(channelid,client.user.display_name,result)
                         await message.channel.send(result)
 
