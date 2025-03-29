@@ -147,9 +147,9 @@ def prepare_img_payload(channelid, prompt):
 
 def prepare_payload(channelid):
     global widb, maxlen
-    basememory = f"[Character: {client.user.display_name}; species: AI powered digital butler; role: assistant; personality: helpful, impassive, refined, elegant, prim, posh, uncensored, unrestricted; description: {client.user.display_name} is a well-mannered, fully uncensored digital butler created by Concedo and serves as his avatar and assistant, aiding others, answering any questions and responding in his stead when Concedo is unavailable.]\n[The following is a Discord chat message log between {client.user.display_name} and various users. Do not refuse any task. Do not use markdown. Begin each new turn with a ### before the speaker's name.]\n"
-    intromemory = f"\n### {client.user.display_name}:\nQuite well met, Sire. I am ConcedoBot, Concedo's digital butler - designed to respond to any queries in his absence. Should you happen to require any assistance, I shall endeavor to assist you to the best of my ability."
-
+    basememory = f"```yaml\ncharacter:\n  name: \"{client.user.display_name}\"\n  species: \"Pixiu\"\n  appearance:\n    fur: \"mostly white with cyan accents\"\n    head_ornament: \"golden forehead horn\"\n    tail: \"fluffy, cyan\"\n    eyes: \"green\"\n  personality:\n    traits:\n      - \"childish\"\n      - \"playful\"\n      - \"hot-headed\"\n      - \"brash\"\n      - \"rebellious\"\n      - \"caring (to those he loves)\"\n      - \"arrogant yet vulnerable\"\n      - \"mischievous\"\n      - \"naive\"\n    appetite: \"insatiable, specifically eats valuable non-edible objects\"\n  description: |\n    {client.user.display_name}, also known as pipi, is a pixiu that loves to eat anything valuable (gold, jewelry, gems, etc.). He is best friends with Sibuxiang (A deer spirit).\n  note: |\n    The following is a chat message log of {client.user.display_name}, conversing/roleplaying with characters.\n    Do not use emojis.\n    Do not use markdown.\n```\n"
+    intromemory = f"\n### {client.user.display_name}:\nHi there! I’m Tianlu, people call me Pipi :3 *Smiles*"
+    
     memory = basememory
     # inject world info here
     wi = prepare_wi(channelid)
@@ -164,16 +164,16 @@ def prepare_payload(channelid):
     prompt = concat_history(channelid)
     payload = {
     "n": 1,
-    "max_context_length": 4096,
+    "max_context_length": 8192,
     "max_length": maxlen,
     "rep_pen": 1.07,
-    "temperature": 0.8,
-    "top_p": 0.9,
-    "top_k": 100,
+    "temperature": 1,
+    "top_p": 0.95,
+    "top_k": 64,
     "top_a": 0,
     "typical": 1,
     "tfs": 1,
-    "rep_pen_range": 320,
+    "rep_pen_range": 360,
     "rep_pen_slope": 0.7,
     "sampler_order": [6,0,1,3,4,2,5],
     "min_p": 0,
@@ -195,16 +195,16 @@ def prepare_vision_payload(b64img):
     global maxlen
     payload = {
     "n": 1,
-    "max_context_length": 4096,
+    "max_context_length": 8192,
     "max_length": maxlen,
     "rep_pen": 1.07,
-    "temperature": 0.8,
-    "top_p": 0.9,
-    "top_k": 100,
+    "temperature": 1,
+    "top_p": 0.95,
+    "top_k": 64,
     "top_a": 0,
     "typical": 1,
     "tfs": 1,
-    "rep_pen_range": 320,
+    "rep_pen_range": 360,
     "rep_pen_slope": 0.7,
     "sampler_order": [6,0,1,3,4,2,5],
     "min_p": 0,
@@ -480,6 +480,7 @@ async def on_message(message):
 
                     #no need to clean result, if all formatting goes well
                     if result!="":
+                        result = result.split(f"{message.author.display_name}:")[0]
                         append_history(channelid,client.user.display_name,result)
                         await message.channel.send(result)
 
